@@ -23,3 +23,5 @@ function bash_prompt(){
 }
 
 bash_prompt
+
+alias "update"="sudo apt update | sudo apt upgrade -y | sudo apt autoremove"
