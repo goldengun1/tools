@@ -12,16 +12,16 @@ wht='\[\033[01;37m\]'   # White
 clr='\[\033[00m\]'      # Reset
 
 function git_branch() {
-    if [ -d .git ] ; then
+    if [ -d "$(git rev-parse --git-dir 2>/dev/null)" ]; then
         printf "%s" "($(git branch 2> /dev/null | awk '/\*/{print $2}'))";
     fi
 }
 
 function bash_prompt(){
     # PS1='${debian_chroot:+($debian_chroot)}'${blu}'$(git_branch)'${pur}' \W'${grn}' \$ '${clr}
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]$(git_branch)'${clr}'\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] '${pur}'$(git_branch)'${clr}'\$ '
 }
 
 bash_prompt
 
-alias "update"="sudo apt update | sudo apt upgrade -y | sudo apt autoremove"
+alias "update"="sudo apt update | sudo apt upgrade -y"
