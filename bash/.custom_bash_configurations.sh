@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# alias currentbranch='git branch | grep \* | sed "s/* //"'
 blk='\[\033[01;30m\]'   # Black
 red='\[\033[01;31m\]'   # Red
 grn='\[\033[01;32m\]'   # Green
@@ -24,4 +23,16 @@ function bash_prompt(){
 
 bash_prompt
 
-alias "update"="sudo apt update | sudo apt upgrade -y"
+alias update="sudo apt update | sudo apt upgrade -y"
+
+alias currentbranch='git branch | grep \* | sed "s/* //"'
+
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
+#ls aliases
+alias ls='ls --color=auto'
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
