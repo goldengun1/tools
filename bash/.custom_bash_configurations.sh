@@ -37,3 +37,5 @@ alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 alias disk='df -H | egrep -i "Filesystem.*|dev/sd.*|dev/nvm.*" --color=never'
+alias scale='echo "Defautl configurations for applications scale override
+"echo "/usr/share/applications/"'
