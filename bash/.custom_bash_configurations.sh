@@ -18,7 +18,7 @@ function git_branch() {
 
 function bash_prompt(){
     # PS1='${debian_chroot:+($debian_chroot)}'${blu}'$(git_branch)'${pur}' \W'${grn}' \$ '${clr}
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] '${pur}'$(git_branch)'${clr}'\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] '${ylw}'$(git_branch)'${clr}'\$ '
 }
 
 bash_prompt
@@ -37,5 +37,4 @@ alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 alias disk='df -H | egrep -i "Filesystem.*|dev/sd.*|dev/nvm.*" --color=never'
-alias scale='echo "Defautl configurations for applications scale override
-"echo "/usr/share/applications/"'
+alias scale='echo -e "Defautl configurations for applications scale override\r\n/usr/share/applications/"'
