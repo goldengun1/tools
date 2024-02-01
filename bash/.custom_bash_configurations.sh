@@ -23,6 +23,11 @@ function bash_prompt(){
 
 function venv_prompt_update(){
     sed -r -i 's/\s*PS1=\"\((.*)/PS1="\\[\\033[01;35m\\](.venv) \\[\\033[00m\\]${PS1:-}"/' "$1"
+    # TODO
+    # Make the same effect if the user is using Conda instead of python venv
+    # When user activate some conda evnironment with "conda activate <ENV>", the prompt changes, but there is no
+    # activate file for each environment like when using python venv.
+    # Function needs to check if the conda is present and if so, to modify the activate script.
 }
 
 bash_prompt
