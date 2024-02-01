@@ -21,6 +21,10 @@ function bash_prompt(){
     PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] '${ylw}'$(git_branch)'${clr}'\$ '
 }
 
+function venv_prompt_update(){
+    sed -r -i 's/\s*PS1=\"\((.*)/PS1="\\[\\033[01;35m\\](.venv) \\[\\033[00m\\]${PS1:-}"/' "$1"
+}
+
 bash_prompt
 
 alias update="sudo apt update | sudo apt upgrade -y"
