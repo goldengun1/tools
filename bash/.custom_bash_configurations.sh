@@ -17,8 +17,12 @@ function git_branch() {
 }
 
 function bash_prompt(){
-    # PS1='${debian_chroot:+($debian_chroot)}'${blu}'$(git_branch)'${pur}' \W'${grn}' \$ '${clr}
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] '${ylw}'$(git_branch)'${clr}'\$ '
+    if [ $(id -u) -eq 0 ];
+    then # you are root, make the prompt red
+        PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]'${red}'\u'${grn}'@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] '${ylw}'$(git_branch)'${clr}'\$ '
+    else
+        PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] '${ylw}'$(git_branch)'${clr}'\$ '
+    fi
 }
 
 function venv_prompt_update(){
