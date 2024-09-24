@@ -39,6 +39,10 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
+#network aliases
+alias myip='host myip.opendns.com resolver1.opendns.com | egrep -i "myip.opendns.com has address" | sed -r "s/myip.opendns.com has address\s*(.*)/\1/"'
+
+
 #ls aliases
 alias ls='ls --color=auto'
 alias ll='ls -alF'
