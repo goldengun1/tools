@@ -4,9 +4,9 @@ blk='\[\033[01;30m\]'   # Black
 red='\[\033[01;31m\]'   # Red
 grn='\[\033[01;32m\]'   # Green
 ylw='\[\033[01;33m\]'   # Yellow
-blu='\[\033[01;34m\]'   # Blue
+cyn='\[\033[01;34m\]'   # Blue
 pur='\[\033[01;35m\]'   # Purple
-cyn='\[\033[01;36m\]'   # Cyan
+blu='\[\033[01;36m\]'   # Cyan
 wht='\[\033[01;37m\]'   # White
 clr='\[\033[00m\]'      # Reset
 
@@ -21,7 +21,7 @@ function bash_prompt(){
     then # you are root, make the prompt red
         PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]'${red}'\u'${grn}'@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] '${ylw}'$(git_branch)'${clr}'\$ '
     else
-        PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] '${ylw}'$(git_branch)'${clr}'\$ '
+        PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]'${blu}'\u'${grn}'@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] '${ylw}'$(git_branch)'${clr}'\$ '
     fi
 }
 
