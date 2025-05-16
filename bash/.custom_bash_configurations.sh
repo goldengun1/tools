@@ -14,7 +14,7 @@ function git_branch() {
     if [ -d "$(git rev-parse --git-dir 2>/dev/null)" ]; then
         local branch
         branch=$(git symbolic-ref --short -q HEAD 2>/dev/null || git describe --tags --exact-match 2>/dev/null || echo "(no branch)")
-        printf "%s" "$branch";
+        printf "(%s)" "$branch";
     fi
 }
 
