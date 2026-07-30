@@ -11,16 +11,26 @@
 # wht='\033[1;37m'   # White
 # clr='\033[0m'      # Reset color
 
-# For Linux
+# For Linux PS1
 blk='\[\033[01;30m\]'   # Black
 red='\[\033[01;31m\]'   # Red
 grn='\[\033[01;32m\]'   # Green
 ylw='\[\033[01;33m\]'   # Yellow
 cyn='\[\033[01;34m\]'   # Blue
 pur='\[\033[01;35m\]'   # Purple
+mgn='\[\033[1;38;2;255;0;255m\]' # Magenta
 blu='\[\033[01;36m\]'   # Cyan
 wht='\[\033[01;37m\]'   # White
 clr='\[\033[00m\]'      # Reset
+
+# For echo printing
+Egrn='\033[01;32m'       # Green
+Ered='\033[01;31m'       # Red
+Eylw='\033[01;33m'       # Yellow
+Eblu='\033[01;36m'
+Epur='\033[01;35m'      # Purple
+Emgn='\033[1;38;2;255;0;255m' # Magenta
+Eclr='\033[00m'         # Reset
 
 function local_bin_path_add() {
   local bin_dir="$HOME/.bin"  # Store the directory in a local variable
