@@ -85,6 +85,8 @@ phone-cast() {
 
 bash_prompt
 
+local_bin_path_add
+
 alias update="sudo apt update && sudo apt upgrade -y; sudo apt-get update && sudo apt-get upgrade -y;"
 
 alias currentbranch='git branch | grep \* | sed "s/* //"'
