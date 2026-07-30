@@ -72,7 +72,7 @@ function bash_prompt(){
 }
 
 function venv_prompt_update(){
-    sed -r -i 's/\s*PS1=\"\((.*)/PS1="\\[\\033[01;35m\\](.venv) \\[\\033[00m\\]${PS1:-}"/' "$1"
+    sed -r -i 's/\s*PS1=\"\((.*)/PS1="\\[\\033[1;38;2;255;0;255m\\](.venv) \\[\\033[00m\\]${PS1:-}"/' "$1"
 }
 
 phone-cast() {
