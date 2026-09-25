@@ -32,6 +32,62 @@ Epur='\033[01;35m'      # Purple
 Emgn='\033[1;38;2;255;0;255m' # Magenta
 Eclr='\033[00m'         # Reset
 
+# Artifactory Token Expiry Checker
+check_artifactory_token() {
+    local input="$1"
+
+    # If no token is provided, check if stdin is being piped
+    if [ -z "$input" ]; then
+        if [ ! -t 0 ]; then
+            input=$(cat)
+        else
+            echo -e "${Ered}Error: No token provided.${Eclr}"
+            echo "Usage: check_artifactory_token <TOKEN_OR_BASE64_STRING>"
+            return 1
+        fi
+    fi
+
+    # Clean wrapping whitespace, quotes, and newlines
+    input=$(echo "$input" | tr -d '\n\r"'\'' ')
+
+    # 1. First base64 decode attempt
+    local decoded1
+    decoded1=$(echo "$input" | base64 -d 2>/dev/null)
+
+    if [ -n "$decoded1" ]; then
+        # Case 1: Decoded string starts directly with "reftkn"
+        if [[ "$decoded1" =~ ^reftkn:[0-9]{2}: ]]; then
+            input="$decoded1"
+
+        # Case 2: Decoded string is "username:token" (where token is another base64 string)
+        elif [[ "$decoded1" =~ ^[^:]+:(.+)$ ]]; then
+            local nested_base64="${BASH_REMATCH[1]}"
+            local decoded2
+            decoded2=$(echo "$nested_base64" | base64 -d 2>/dev/null)
+
+            # If the double-decoded token is a valid reftkn, use it
+            if [[ "$decoded2" =~ ^reftkn:[0-9]{2}: ]]; then
+                input="$decoded2"
+            fi
+        fi
+    fi
+
+    # 3. Extract the Unix Epoch Timestamp and format it
+    if [[ "$input" =~ ^reftkn:[0-9]{2}:([0-9]+): ]]; then
+        local epoch="${BASH_REMATCH[1]}"
+        local human_date
+        human_date=$(date -d "@$epoch" 2>/dev/null || date -r "$epoch" 2>/dev/null)
+
+        echo -e "${Egrn}✔ Valid Artifactory Reference Token Detected${Eclr}"
+        echo -e "${Eblu}Expiry Epoch:${Eclr} $epoch"
+        echo -e "${Eblu}Expiry Date: ${Eclr} \e[1m$human_date\e[0m"
+    else
+        echo -e "${Ered}✖ Error: Not a valid Artifactory token or Base64 encoded token config.${Eclr}"
+        return 1
+    fi
+}
+
+
 function local_bin_path_add() {
   local bin_dir="$HOME/.bin"  # Store the directory in a local variable
   local path_value="$PATH" #Store the PATH in a local variable
@@ -62,6 +118,46 @@ function git_branch() {
     fi
 }
 
+gpull() {
+  for dir in */; do
+    if [ -d "${dir}.git" ]; then
+      echo "📦 Checking: ${dir%/}"
+
+      # 1. Check for uncommitted changes (if output is not empty, there are changes)
+      if [ -n "$(git -C "$dir" status --porcelain)" ]; then
+        echo "⚠️  Skipping: Repository has uncommitted changes."
+        echo "----------------------------------------"
+        continue # Move to the next directory
+      fi
+
+      # 2. Get the currently active branch
+      current_branch=$(git -C "$dir" branch --show-current)
+      echo "🌿 Current branch: $current_branch"
+
+      # 3. If we are NOT on main, check it out first
+      if [ "$current_branch" != "main" ]; then
+        echo "🔀 Branch is '$current_branch'. Switching to 'main'..."
+
+        # Suppress checkout output, but catch errors (like if 'main' doesn't exist)
+        if git -C "$dir" checkout main >/dev/null 2>&1; then
+           echo "⬇️  Pulling latest changes..."
+           git -C "$dir" pull
+        else
+           echo "❌ Error: Could not switch to 'main' (Does this repo use 'master'?). Skipping."
+        fi
+      else
+        # We are already on main
+        echo "⬇️  Already on 'main'. Pulling latest changes..."
+        git -C "$dir" pull
+      fi
+
+      echo "----------------------------------------"
+    fi
+  done
+  echo "✅ All repositories processed!"
+}
+
+
 function bash_prompt(){
     if [ $(id -u) -eq 0 ];
     then # you are root, make the prompt red
@@ -83,6 +179,13 @@ phone-cast() {
   scrcpy "$@" > /dev/null 2>&1 &
 }
 
+phoneping() {
+  adb shell <<EOF
+cmd notification post -S bigtext -t 'Ping' 'Tag' 'Liveness Probe'
+EOF
+}
+
+
 bash_prompt
 
 local_bin_path_add
@@ -90,6 +193,8 @@ local_bin_path_add
 alias update="sudo apt update && sudo apt upgrade -y; sudo apt-get update && sudo apt-get upgrade -y;"
 
 alias currentbranch='git branch | grep \* | sed "s/* //"'
+
+alias checktoken=check_artifactory_token
 
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
