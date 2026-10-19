@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -euo pipefail
 
 git pull
 cp ./.custom_bash_configurations.sh ~/
