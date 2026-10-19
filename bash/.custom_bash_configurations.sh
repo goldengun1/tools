@@ -118,6 +118,19 @@ function git_branch() {
     fi
 }
 
+function repo_prompt() {
+  local dir="$PWD"
+  while :; do
+    if [ -d "$dir/.repo" ]; then
+      printf '(repo) '
+      return
+    fi
+    [ "$dir" = / ] && return
+    dir="${dir%/*}"
+    [ -n "$dir" ] || dir=/
+  done
+}
+
 gpull() {
   for dir in */; do
     if [ -d "${dir}.git" ]; then
@@ -161,14 +174,14 @@ gpull() {
 function bash_prompt(){
     if [ $(id -u) -eq 0 ];
     then # you are root, make the prompt red
-        PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]'${red}'\u'${grn}'@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] '${ylw}'$(git_branch)'${clr}'\$ '
+    PS1="${mgn}"'$(repo_prompt)'"${clr}"'${debian_chroot:+($debian_chroot)}\[\033[01;32m\]'${red}'\u'${grn}'@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] '${ylw}'$(git_branch)'${clr}'\$ '
     else
-        PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]'${blu}'\u'${grn}'@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] '${ylw}'$(git_branch)'${clr}'\$ '
+    PS1="${mgn}"'$(repo_prompt)'"${clr}"'${debian_chroot:+($debian_chroot)}\[\033[01;32m\]'${blu}'\u'${grn}'@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] '${ylw}'$(git_branch)'${clr}'\$ '
     fi
 }
 
 function venv_prompt_update(){
-    sed -r -i 's/\s*PS1=\"\((.*)/PS1="\\[\\033[1;38;2;255;0;255m\\](.venv) \\[\\033[00m\\]${PS1:-}"/' "$1"
+    sed -r -i 's/\s*PS1=\x27\((.*)/PS1="\\[\\033[1;38;2;255;0;255m\\](.venv) \\[\\033[00m\\]${PS1:-}"/' "$1"
 }
 
 phone-cast() {
@@ -218,4 +231,3 @@ alias ..='cd ../'
 alias ...='cd ../../'
 alias ....='cd ../../../'
 alias .....='cd ../../../../'
-
